@@ -1,9 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const {creerAvis, listerAvis, recupererAvisParId, mettreAJourAvis, supprimerAvis} = require('../controllers/avis.controller');
 
-// Route temporaire pour tester
-router.get('/', (req, res) => {
-  res.json({ message: 'API Avis fonctionne!' });
-});
+router.post('/', creerAvis);
+
+router.get('/', listerAvis);
+
+router.get('/:id', recupererAvisParId);
+
+router.put('/:id', mettreAJourAvis);
+
+
+router.delete('/:id', supprimerAvis);
 
 module.exports = router;

@@ -1,9 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const {creerUtilisateur, listerUtilisateurs, recupererUtilisateurParId, mettreAJourUtilisateur, supprimerUtilisateur} = require('../controllers/utilisateur.controller');
 
-// Route temporaire pour tester
-router.get('/', (req, res) => {
-  res.json({ message: 'API Utilisateurs fonctionne!' });
-});
+router.post('/', creerUtilisateur);
+
+router.get('/', listerUtilisateurs);
+
+router.get('/:id', recupererUtilisateurParId);
+
+router.put('/:id', mettreAJourUtilisateur);
+
+router.delete('/:id', supprimerUtilisateur);
 
 module.exports = router;
