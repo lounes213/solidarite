@@ -92,4 +92,25 @@ const Offre = sequelize.define('Offre', {
   timestamps: true
 });
 
+// Define associations
+Offre.associate = (models) => {
+  // An offer belongs to a host (user)
+  Offre.belongsTo(models.Utilisateur, {
+    foreignKey: 'idHote',
+    as: 'hote'
+  });
+
+  // An offer can have many reservations
+  Offre.hasMany(models.Reservation, {
+    foreignKey: 'idOffre',
+    as: 'reservations'
+  });
+
+  // An offer can have many reviews
+  Offre.hasMany(models.Avis, {
+    foreignKey: 'offreId',
+    as: 'avis'
+  });
+};
+
 module.exports = Offre;

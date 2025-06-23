@@ -71,4 +71,25 @@ const Avis = sequelize.define('Avis', {
   timestamps: true
 });
 
+// Define associations
+Avis.associate = (models) => {
+  // A review belongs to a reservation
+  Avis.belongsTo(models.Reservation, {
+    foreignKey: 'idReservation',
+    as: 'reservation'
+  });
+
+  // A review belongs to an author (user who writes the review)
+  Avis.belongsTo(models.Utilisateur, {
+    foreignKey: 'auteurId',
+    as: 'auteur'
+  });
+
+  // A review belongs to a target (user who receives the review)
+  Avis.belongsTo(models.Utilisateur, {
+    foreignKey: 'cibleId',
+    as: 'cible'
+  });
+};
+
 module.exports = Avis;

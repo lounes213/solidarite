@@ -25,4 +25,20 @@ const SalleDeChat = sequelize.define('SalleDeChat', {
   timestamps: true
 });
 
+// Define associations
+SalleDeChat.associate = (models) => {
+  // A chat room can have many messages
+  SalleDeChat.hasMany(models.Message, {
+    foreignKey: 'idSalle',
+    as: 'messages'
+  });
+
+  // A chat room can have many participants (users)
+  SalleDeChat.belongsToMany(models.Utilisateur, {
+    through: 'ParticipantsChat',
+    foreignKey: 'idSalle',
+    as: 'participants'
+  });
+};
+
 module.exports = SalleDeChat;

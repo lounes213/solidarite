@@ -36,4 +36,25 @@ const Reservation = sequelize.define('Reservation', {
   timestamps: true
 });
 
+// Define associations
+Reservation.associate = (models) => {
+  // A reservation belongs to an offer
+  Reservation.belongsTo(models.Offre, {
+    foreignKey: 'idOffre',
+    as: 'offre'
+  });
+
+  // A reservation belongs to a student (user)
+  Reservation.belongsTo(models.Utilisateur, {
+    foreignKey: 'idEtudiant',
+    as: 'etudiant'
+  });
+
+  // A reservation can have many reviews
+  Reservation.hasMany(models.Avis, {
+    foreignKey: 'reservationId',
+    as: 'avis'
+  });
+};
+
 module.exports = Reservation;

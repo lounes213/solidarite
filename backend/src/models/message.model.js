@@ -36,4 +36,19 @@ const Message = sequelize.define('Message', {
   timestamps: true
 });
 
+// Define associations
+Message.associate = (models) => {
+  // A message belongs to a chat room
+  Message.belongsTo(models.SalleDeChat, {
+    foreignKey: 'idSalle',
+    as: 'salle'
+  });
+
+  // A message belongs to a sender (user)
+  Message.belongsTo(models.Utilisateur, {
+    foreignKey: 'idEmetteur',
+    as: 'emetteur'
+  });
+};
+
 module.exports = Message;
