@@ -12,6 +12,7 @@ const routesOffre = require('./routes/offre.routes');
 const routesReservation = require('./routes/reservation.routes');
 const routesAvis = require('./routes/avis.routes');
 const routesChat = require('./routes/chat.routes');
+const routesNotification = require('./routes/notification.routes');
 
 // Création de l'application Express
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/offres', routesOffre);
 app.use('/api/reservations', routesReservation);
 app.use('/api/avis', routesAvis);
 app.use('/api/chat', routesChat);
+app.use('/api/notifications', routesNotification);
 
 // Middleware de gestion d'erreurs
 app.use((err, req, res, next) => {

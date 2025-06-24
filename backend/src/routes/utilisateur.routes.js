@@ -1,15 +1,44 @@
 const express = require('express');
 const router = express.Router();
-const {creerUtilisateur, listerUtilisateurs, recupererUtilisateurParId, mettreAJourUtilisateur, supprimerUtilisateur} = require('../controllers/utilisateur.controller');
+const {
+  creerUtilisateur,
+  listerUtilisateurs,
+  recupererUtilisateurParId,
+  mettreAJourUtilisateur,
+  supprimerUtilisateur,
+  connecterUtilisateur
+} = require('../controllers/utilisateur.controller');
 
-router.post('/', creerUtilisateur);
+const {
+  authentifierToken,
+  authentificationOptionnelle
+} = require('../middlewares/auth.middleware');
 
-router.get('/', listerUtilisateurs);
+const {
+  validerCreationUtilisateur,
+  validerConnexion,
+  validerIdParam,
+  validerPagination
+} = require('../middlewares/validation.middleware');
 
-router.get('/:id', recupererUtilisateurParId);
+// Routes publiques
+// POST /api/utilisateurs - Créer un nouvel utilisateur (inscription)
+router.post('/', validerCreationUtilisateur, creerUtilisateur);
 
-router.put('/:id', mettreAJourUtilisateur);
+// POST /api/utilisateurs/login - Connexion utilisateur
+router.post('/login', validerConnexion, connecterUtilisateur);
 
-router.delete('/:id', supprimerUtilisateur);
+// Routes protégées
+// GET /api/utilisateurs - Lister tous les utilisateurs (avec pagination et filtres)
+router.get('/', authentificationOptionnelle, validerPagination, listerUtilisateurs);
+
+// GET /api/utilisateurs/:id - Récupérer un utilisateur par son ID
+router.get('/:id', authentificationOptionnelle, validerIdParam, recupererUtilisateurParId);
+
+// PUT /api/utilisateurs/:id - Mettre à jour un utilisateur
+router.put('/:id', authentifierToken, validerIdParam, mettreAJourUtilisateur);
+
+// DELETE /api/utilisateurs/:id - Supprimer un utilisateur
+router.delete('/:id', authentifierToken, validerIdParam, supprimerUtilisateur);
 
 module.exports = router;

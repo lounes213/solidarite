@@ -8,19 +8,33 @@ const {
   supprimerOffre
 } = require('../controllers/offre.controller');
 
-// GET /api/offres - Lister toutes les offres
-router.get('/', listerOffres);
+const {
+  authentifierToken,
+  verifierHote,
+  authentificationOptionnelle
+} = require('../middlewares/auth.middleware');
 
-// POST /api/offres - Créer une nouvelle offre
-router.post('/', creerOffre);
+const {
+  validerCreationOffre,
+  validerIdParam,
+  validerPagination
+} = require('../middlewares/validation.middleware');
+
+// Routes publiques
+// GET /api/offres - Lister toutes les offres (avec pagination et filtres)
+router.get('/', authentificationOptionnelle, validerPagination, listerOffres);
 
 // GET /api/offres/:id - Récupérer une offre par son ID
-router.get('/:id', recupererOffreParId);
+router.get('/:id', authentificationOptionnelle, validerIdParam, recupererOffreParId);
+
+// Routes protégées (hôtes uniquement)
+// POST /api/offres - Créer une nouvelle offre
+router.post('/', authentifierToken, verifierHote, validerCreationOffre, creerOffre);
 
 // PUT /api/offres/:id - Mettre à jour une offre
-router.put('/:id', mettreAJourOffre);
+router.put('/:id', authentifierToken, verifierHote, validerIdParam, mettreAJourOffre);
 
 // DELETE /api/offres/:id - Supprimer une offre
-router.delete('/:id', supprimerOffre);
+router.delete('/:id', authentifierToken, verifierHote, validerIdParam, supprimerOffre);
 
 module.exports = router;

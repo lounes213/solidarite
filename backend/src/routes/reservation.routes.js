@@ -1,16 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const {creerReservation, listerReservations, recupererReservationParId, mettreAJourReservation, supprimerReservation} = require('../controllers/reservation.controller');
+const {
+  creerReservation,
+  listerReservations,
+  recupererReservationParId,
+  mettreAJourReservation,
+  supprimerReservation
+} = require('../controllers/reservation.controller');
 
-router.post('/', creerReservation);
+const {
+  authentifierToken,
+  verifierEtudiant
+} = require('../middlewares/auth.middleware');
 
-router.get('/', listerReservations);
+const {
+  validerCreationReservation,
+  validerIdParam,
+  validerPagination
+} = require('../middlewares/validation.middleware');
 
+// Toutes les routes nécessitent une authentification
+router.use(authentifierToken);
 
-router.get('/:id', recupererReservationParId);
+// GET /api/reservations - Lister toutes les réservations (avec pagination et filtres)
+router.get('/', validerPagination, listerReservations);
 
-router.put('/:id', mettreAJourReservation);
+// POST /api/reservations - Créer une nouvelle réservation (étudiants uniquement)
+router.post('/', verifierEtudiant, validerCreationReservation, creerReservation);
 
-router.delete('/:id', supprimerReservation);
+// GET /api/reservations/:id - Récupérer une réservation par son ID
+router.get('/:id', validerIdParam, recupererReservationParId);
+
+// PUT /api/reservations/:id - Mettre à jour une réservation
+router.put('/:id', validerIdParam, mettreAJourReservation);
+
+// DELETE /api/reservations/:id - Supprimer une réservation
+router.delete('/:id', validerIdParam, supprimerReservation);
 
 module.exports = router;

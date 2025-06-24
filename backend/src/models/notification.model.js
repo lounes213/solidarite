@@ -16,51 +16,49 @@ const Notification = sequelize.define('Notification', {
     }
   },
   type: {
-    type: DataTypes.ENUM(
-      'message',
-      'reservation',
-      'avis',
-      'atelier',
-      'badge',
-      'system'
-    ),
+    type: DataTypes.ENUM('reservation', 'confirmation', 'annulation', 'avis', 'message', 'systeme'),
     allowNull: false
   },
   titre: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  contenu: {
+  message: {
     type: DataTypes.TEXT,
     allowNull: false
   },
-  idCible: {
-    type: DataTypes.UUID,
+  donnees: {
+    type: DataTypes.JSON,
     allowNull: true,
-    comment: 'ID de l\'élément concerné (message, réservation, etc.)'
+    comment: 'Données supplémentaires liées à la notification'
   },
-  typeCible: {
-    type: DataTypes.ENUM('message', 'reservation', 'avis', 'atelier', 'badge'),
-    allowNull: true
-  },
-  estLu: {
+  lue: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
+    defaultValue: false,
+    allowNull: false
   },
   dateLecture: {
     type: DataTypes.DATE,
     allowNull: true
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  hooks: {
+    beforeUpdate: (notification) => {
+      if (notification.changed('lue') && notification.lue) {
+        notification.dateLecture = new Date();
+      }
+    }
+  }
 });
 
 // Define associations
 Notification.associate = (models) => {
+  // A notification belongs to a user
   Notification.belongsTo(models.Utilisateur, {
     foreignKey: 'idUtilisateur',
     as: 'utilisateur'
   });
 };
 
-module.exports = Notification; 
+module.exports = Notification;
