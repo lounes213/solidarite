@@ -1,11 +1,11 @@
 import type {
   MetaFunction,
-  LinksFunction,
-  ErrorBoundaryProps,
+  LinksFunction as RouterLinksFunction,
+  ErrorBoundaryProps as RouterErrorBoundaryProps,
 } from "react-router-dom";
 
 export namespace Route {
   export type MetaArgs = Parameters<MetaFunction>[0];
-  export type LinksFunction = LinksFunction;
-  export type ErrorBoundaryProps = ErrorBoundaryProps;
+  export type LinksFunction = RouterLinksFunction;
+  export type ErrorBoundaryProps = RouterErrorBoundaryProps;
 }
